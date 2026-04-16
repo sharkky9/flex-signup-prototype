@@ -813,7 +813,7 @@
         <div class="approval-banner">
           <div class="approval-chip">
             <span class="approval-chip-icon">✓</span>
-            <span>You're approved for <strong id="approvedAmount">$500</strong> of rent credit</span>
+            <span>You're approved for <strong class="credit-amount">$500</strong> of rent credit</span>
           </div>
           <h1>Choose your plan</h1>
         </div>
@@ -833,7 +833,7 @@
           </ul>
           <div class="plan-fee-footer">
             <span class="plan-fee-amount" id="flexFee">$21.70</span>
-            <span>/mo · 1.4% of rent</span>
+            <span>· pay only when you use it</span>
           </div>
         </div>
 
@@ -844,12 +844,15 @@
             <div class="plan-name">Pay in Full</div>
           </div>
           <div class="plan-headline">
-            Your <span id="pifAmount">$500</span> safety net, ready when you need it.
+            Your <span class="credit-amount">$500</span> safety net, ready when you need it.
           </div>
-          <p class="plan-mechanics">Pay your full rent on time and keep your $500 ready.</p>
+          <p class="plan-mechanics">Pay rent through Flex each month to keep your <span class="credit-amount">$500</span> credit line available.</p>
+          <ul class="plan-features">
+            <li>Build credit history through Flex's rent reporting</li>
+          </ul>
           <div class="plan-fee-footer">
             <span class="plan-fee-amount">$0</span>
-            <span>/mo · no membership fee</span>
+            <span>· always free</span>
           </div>
         </div>
       </div>
@@ -863,9 +866,9 @@
       <div class="content">
         <div class="pif-hero">
           <div class="pif-shield">🛡️</div>
-          <h1>Your <span id="pifHeroAmount">$500</span> safety net, always ready</h1>
+          <h1>Your <span class="credit-amount">$500</span> safety net, always ready</h1>
           <p class="subtitle">
-            Pay your rent on time and keep your $500 — ready whenever you need it.
+            Pay your rent on time and keep your <span class="credit-amount">$500</span> — ready whenever you need it.
           </p>
         </div>
 
@@ -874,21 +877,21 @@
             <div class="tl-marker"></div>
             <div class="tl-content">
               <div class="tl-month">Today</div>
-              <div class="tl-status">Your <strong id="pifTimelineAmount1">$500</strong> is approved and ready</div>
+              <div class="tl-status">Your <strong class="credit-amount">$500</strong> is approved and ready</div>
             </div>
           </div>
           <div class="tl-item current">
             <div class="tl-marker"></div>
             <div class="tl-content">
               <div class="tl-month">This month</div>
-              <div class="tl-status">Pay rent on time → keep your $500</div>
+              <div class="tl-status">Pay rent on time → keep your <span class="credit-amount">$500</span></div>
             </div>
           </div>
           <div class="tl-item future">
             <div class="tl-marker"></div>
             <div class="tl-content">
               <div class="tl-month">Every month</div>
-              <div class="tl-status">Your $500 stays with you</div>
+              <div class="tl-status">Your <span class="credit-amount">$500</span> stays with you</div>
             </div>
           </div>
           <div class="tl-item highlight">
@@ -896,8 +899,8 @@
             <div class="tl-content">
               <div class="tl-month">When life happens</div>
               <div class="tl-status">
-                Tap once to use your <strong id="pifTimelineAmount2">$500</strong> —
-                <strong>no paperwork needed.</strong>
+                Tap once to use your <strong class="credit-amount">$500</strong> —
+                <strong>already approved.</strong>
               </div>
             </div>
           </div>
@@ -1100,15 +1103,15 @@
     const credit = Math.max(50, Math.round(rent / 3 / 50) * 50);
     const upfront = rent - credit;
 
-    document.getElementById('approvedAmount').textContent = formatMoney(credit);
-    document.getElementById('pifAmount').textContent = formatMoney(credit);
+    // Sweep every credit-amount display in one go — keeps future copy changes safe
+    // (any new <span class="credit-amount">$X</span> will sync automatically).
+    document.querySelectorAll('.credit-amount').forEach(el => {
+      el.textContent = formatMoney(credit);
+    });
+
+    // flexMechanics has dynamic upfront + credit amounts, so it's built from JS.
     document.getElementById('flexMechanics').textContent =
       `Pay ${formatMoney(upfront)} now and defer ${formatMoney(credit)} until later in the month.`;
-
-    // Screen 6 (PIF reinforcement) credit amounts
-    document.getElementById('pifHeroAmount').textContent = formatMoney(credit);
-    document.getElementById('pifTimelineAmount1').textContent = formatMoney(credit);
-    document.getElementById('pifTimelineAmount2').textContent = formatMoney(credit);
 
     const fee = (rent * 0.014).toFixed(2);
     document.getElementById('flexFee').textContent = '$' + Number(fee).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
