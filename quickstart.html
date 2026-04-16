@@ -404,51 +404,49 @@
     text-transform: uppercase;
   }
 
+  /* Plan card: name acts as category label (small, compact), value-prop headline is the hero */
   .plan-header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 8px;
-    gap: 12px;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
   }
   .plan-name {
-    font-size: 17px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--text);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
   }
   .plan-card.free .plan-name { color: var(--text-muted); }
 
-  .plan-price-block { text-align: right; flex-shrink: 0; }
-  .plan-price {
-    font-size: 20px;
+  /* The hero — the value prop */
+  .plan-headline {
+    font-size: 18px;
     font-weight: 700;
     color: var(--flex-purple);
-    line-height: 1;
+    line-height: 1.3;
+    margin-bottom: 8px;
   }
-  .plan-card.free .plan-price { color: var(--text-muted); font-size: 18px; }
-  .plan-price-unit {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
+  .plan-card.free .plan-headline { color: var(--text); }
 
-  .plan-tagline {
+  /* Supporting mechanics copy */
+  .plan-mechanics {
     font-size: 13px;
     color: var(--text-muted);
     margin-bottom: 12px;
-    line-height: 1.4;
+    line-height: 1.45;
   }
-  .plan-card.recommended .plan-tagline { color: #4d4458; }
 
   .plan-features {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0 0 14px;
   }
   .plan-features li {
     font-size: 13px;
     color: var(--text);
-    padding: 4px 0 4px 22px;
+    padding: 3px 0 3px 22px;
     position: relative;
     line-height: 1.4;
   }
@@ -456,12 +454,32 @@
     content: '✓';
     position: absolute;
     left: 0;
-    top: 3px;
+    top: 2px;
     color: var(--flex-purple);
     font-weight: 700;
   }
   .plan-card.free .plan-features li { color: var(--text-muted); }
   .plan-card.free .plan-features li::before { color: var(--text-subtle); }
+
+  /* Fee footer — demoted below a thin rule, small muted text */
+  .plan-fee-footer {
+    padding-top: 12px;
+    border-top: 1px solid rgba(74, 30, 107, 0.1);
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .plan-card.free .plan-fee-footer {
+    border-top-color: rgba(0, 0, 0, 0.08);
+  }
+  .plan-fee-amount {
+    font-weight: 700;
+    color: var(--text);
+  }
+  .plan-card.recommended .plan-fee-amount { color: var(--flex-purple); }
+  .plan-card.free .plan-fee-amount { color: var(--text-muted); }
 
   .radio {
     width: 20px;
@@ -813,42 +831,35 @@
         <div class="plan-card recommended selected" data-plan="flex">
           <span class="recommended-tag">Most Popular</span>
           <div class="plan-header">
-            <div style="display: flex; align-items: center;">
-              <div class="radio"></div>
-              <div class="plan-name">Flex</div>
-            </div>
-            <div class="plan-price-block">
-              <div class="plan-price" id="flexFee">$21.70</div>
-              <div class="plan-price-unit">per month · 1.4% of rent</div>
-            </div>
+            <div class="radio"></div>
+            <div class="plan-name">Flex</div>
           </div>
-          <p class="plan-tagline" id="flexTagline">Pay part of your rent now and defer the rest to later in the month.</p>
+          <div class="plan-headline">Split your rent. Keep more cash in your pocket today.</div>
+          <p class="plan-mechanics" id="flexMechanics">Pay $1,050 now and defer $500 until later in the month.</p>
           <ul class="plan-features">
-            <li id="flexDeferFeature">Defer up to $500 of your rent each month</li>
             <li>Avoid late fees and cash crunches</li>
             <li>Build credit history with on-time payments</li>
           </ul>
+          <div class="plan-fee-footer">
+            <span class="plan-fee-amount" id="flexFee">$21.70</span>
+            <span>/mo · 1.4% of rent</span>
+          </div>
         </div>
 
         <!-- Free plan (de-emphasized) -->
         <div class="plan-card free" data-plan="pif">
           <div class="plan-header">
-            <div style="display: flex; align-items: center;">
-              <div class="radio"></div>
-              <div class="plan-name">Pay in Full</div>
-            </div>
-            <div class="plan-price-block">
-              <div class="plan-price">$0</div>
-              <div class="plan-price-unit">no monthly fee</div>
-            </div>
+            <div class="radio"></div>
+            <div class="plan-name">Pay in Full</div>
           </div>
-          <p class="plan-tagline">
-            Keep your <strong id="pifAmount">$500</strong> credit approval ready for whenever you need it.
-          </p>
-          <ul class="plan-features">
-            <li>Pay your full rent on time, your way</li>
-            <li>Preserve your credit offer for future months</li>
-          </ul>
+          <div class="plan-headline">
+            Your <span id="pifAmount">$500</span> safety net, waiting whenever you need it.
+          </div>
+          <p class="plan-mechanics">Pay your full rent on time and keep your credit approval ready for the future.</p>
+          <div class="plan-fee-footer">
+            <span class="plan-fee-amount">$0</span>
+            <span>/mo · no membership fee</span>
+          </div>
         </div>
       </div>
       <div class="continue-wrap">
@@ -1103,10 +1114,8 @@
 
     document.getElementById('approvedAmount').textContent = formatMoney(credit);
     document.getElementById('pifAmount').textContent = formatMoney(credit);
-    document.getElementById('flexTagline').textContent =
-      `Pay ${formatMoney(upfront)} now and defer ${formatMoney(credit)} to later in the month.`;
-    document.getElementById('flexDeferFeature').textContent =
-      `Defer up to ${formatMoney(credit)} of your rent each month`;
+    document.getElementById('flexMechanics').textContent =
+      `Pay ${formatMoney(upfront)} now and defer ${formatMoney(credit)} until later in the month.`;
 
     // Screen 6 (PIF reinforcement) credit amounts
     document.getElementById('pifHeroAmount').textContent = formatMoney(credit);
