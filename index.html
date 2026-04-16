@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flex Signup Flow</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --flex-purple: #4a1e6b;
+    --flex-purple-dark: #3a1555;
+    --flex-purple-tint: #f3f0f7;
+    --flex-purple-accent: #ede7f6;
+    --text: #111;
+    --text-muted: #666;
+    --text-subtle: #8a8594;
+    --border: #d6d3dc;
+    --border-muted: #e8e5ef;
+    --bg-muted: #f5f3f7;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    background: #e5e5e5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .phone {
+    width: 375px;
+    height: 812px;
+    background: #fff;
+    border-radius: 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* iOS status bar */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 28px 6px;
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .status-bar .time { display: flex; align-items: center; gap: 4px; }
+  .status-bar .notch {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 28px;
+    background: #000;
+    border-radius: 20px;
+  }
+  .status-bar .right { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .battery {
+    display: inline-block;
+    width: 24px;
+    height: 12px;
+    border: 1px solid #000;
+    border-radius: 3px;
+    position: relative;
+    padding: 1px;
+  }
+  .battery::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: 3px;
+    width: 2px;
+    height: 4px;
+    background: #000;
+    border-radius: 0 1px 1px 0;
+  }
+  .battery-fill {
+    display: block;
+    height: 100%;
+    width: 86%;
+    background: #000;
+    border-radius: 1px;
+  }
+
+  /* Top bar (back + progress + help) */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px 0;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .icon-btn:hover { background: var(--bg-muted); }
+  .icon-btn.help { background: #f3f1f6; font-size: 16px; }
+  .icon-btn.hidden { visibility: hidden; }
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border-muted);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 20%;
+    background: var(--flex-purple);
+    border-radius: 2px;
+    transition: width 0.35s ease;
+  }
+
+  /* Content */
+  .screen {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+  .screen.active { display: flex; }
+
+  .content {
+    flex: 1;
+    padding: 32px 24px 16px;
+    overflow-y: auto;
+  }
+
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.45;
+    margin-bottom: 28px;
+  }
+
+  .row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .row .field { flex: 1; }
+
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .input-wrap { position: relative; }
+
+  .field input {
+    width: 100%;
+    padding: 14px 36px 14px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+    color: var(--text);
+  }
+  .field input:focus {
+    border-color: var(--flex-purple);
+    box-shadow: 0 0 0 1px var(--flex-purple);
+  }
+  .field input::placeholder { color: #b5b0be; }
+
+  .field input.prefix-input { padding-left: 34px; }
+  .input-prefix {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 15px;
+    pointer-events: none;
+  }
+
+  .clear-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #c4c0cb;
+    border: none;
+    color: #fff;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .clear-btn.visible { display: flex; }
+
+  /* Address lookup */
+  .lookup-results {
+    margin-top: 8px;
+    border: 1px solid var(--border-muted);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .lookup-item {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: background 0.15s;
+  }
+  .lookup-item:last-child { border-bottom: none; }
+  .lookup-item:hover, .lookup-item.highlighted { background: var(--flex-purple-tint); }
+  .lookup-item .pin { font-size: 18px; line-height: 1.2; }
+  .lookup-item .info { flex: 1; }
+  .lookup-item .name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .lookup-item .addr { font-size: 13px; color: var(--text-muted); }
+
+  .manual-entry-link {
+    display: block;
+    text-align: center;
+    color: var(--flex-purple);
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .selected-card {
+    background: var(--flex-purple-tint);
+    border: 1.5px solid var(--flex-purple);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .selected-card .info { flex: 1; }
+  .selected-card .name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .selected-card .addr { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .selected-card .change {
+    color: var(--flex-purple);
+    font-size: 13px;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+  }
+
+  /* Continue button */
+  .continue-wrap {
+    padding: 16px 24px 24px;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .continue-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--flex-purple);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    font-family: inherit;
+  }
+  .continue-btn:hover:not(:disabled) { background: var(--flex-purple-dark); }
+  .continue-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Approval banner on screen 5 */
+  .approval-banner {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .approval-check {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--flex-purple);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin: 0 auto 16px;
+    box-shadow: 0 8px 20px rgba(74, 30, 107, 0.25);
+  }
+  .approval-badge {
+    display: inline-block;
+    background: var(--flex-purple-accent);
+    color: var(--flex-purple);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .approval-banner h1 { margin-bottom: 6px; }
+  .approval-amount {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--flex-purple);
+    margin-bottom: 4px;
+  }
+
+  /* Plan cards */
+  .plans-intro {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+    padding: 0 2px;
+  }
+
+  .plan-card {
+    position: relative;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+  }
+  .plan-card:active { transform: scale(0.995); }
+
+  .plan-card.recommended {
+    border: 2px solid var(--flex-purple);
+    background: linear-gradient(180deg, #fff 0%, var(--flex-purple-tint) 100%);
+    box-shadow: 0 6px 18px rgba(74, 30, 107, 0.12);
+  }
+  .plan-card.free {
+    background: var(--bg-muted);
+    border-color: var(--border-muted);
+  }
+
+  /* Selected states — differentiated so PIF doesn't mimic Flex's emphasis */
+  /* Recommended plan stays prominent; selection is shown via the radio fill only */
+  /* Free plan gets a subtle purple tint (not the full gradient/shadow treatment) */
+  .plan-card.free.selected {
+    background: #ece5f2;
+    border-color: #bfb1cf;
+  }
+
+  .recommended-tag {
+    position: absolute;
+    top: -10px;
+    left: 18px;
+    background: var(--flex-purple);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    text-transform: uppercase;
+  }
+
+  .plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    gap: 12px;
+  }
+  .plan-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .plan-card.free .plan-name { color: var(--text-muted); }
+
+  .plan-price-block { text-align: right; flex-shrink: 0; }
+  .plan-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--flex-purple);
+    line-height: 1;
+  }
+  .plan-card.free .plan-price { color: var(--text-muted); font-size: 18px; }
+  .plan-price-unit {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .plan-tagline {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .plan-card.recommended .plan-tagline { color: #4d4458; }
+
+  .plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .plan-features li {
+    font-size: 13px;
+    color: var(--text);
+    padding: 4px 0 4px 22px;
+    position: relative;
+    line-height: 1.4;
+  }
+  .plan-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 3px;
+    color: var(--flex-purple);
+    font-weight: 700;
+  }
+  .plan-card.free .plan-features li { color: var(--text-muted); }
+  .plan-card.free .plan-features li::before { color: var(--text-subtle); }
+
+  .radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    margin-right: 10px;
+    flex-shrink: 0;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .plan-card.selected .radio {
+    border-color: var(--flex-purple);
+  }
+  .plan-card.selected .radio::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: var(--flex-purple);
+    border-radius: 50%;
+  }
+
+  /* iOS keyboard mock */
+  .keyboard {
+    background: #d1d3d9;
+    padding: 8px 4px 4px;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .kb-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .kb-key {
+    flex: 1;
+    max-width: 33px;
+    height: 42px;
+    background: #fff;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    color: #000;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    font-weight: 400;
+  }
+  .kb-key.wide { max-width: 42px; background: #adb3bc; font-size: 14px; }
+  .kb-key.space { max-width: 160px; }
+  .kb-key.return { max-width: 60px; background: #adb3bc; font-size: 14px; }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <!-- Status bar -->
+    <div class="status-bar">
+      <div class="time">3:02 <span>😊</span></div>
+      <div class="notch"></div>
+      <div class="right">
+        <span>📶</span>
+        <span>📡</span>
+        <span>86</span>
+        <span class="battery"><span class="battery-fill"></span></span>
+      </div>
+    </div>
+
+    <!-- Top bar -->
+    <div class="top-bar">
+      <button class="icon-btn hidden" id="backBtn" aria-label="Back">←</button>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <button class="icon-btn help" title="Help">?</button>
+    </div>
+
+    <!-- ============ Screen 1: Name + Email ============ -->
+    <div class="screen active" data-step="1">
+      <div class="content">
+        <h1>Let's get started</h1>
+        <p class="subtitle">We'll use this to set up your Flex account.</p>
+
+        <div class="row">
+          <div class="field">
+            <label for="firstName">First name (legal)</label>
+            <div class="input-wrap">
+              <input type="text" id="firstName" autocomplete="given-name" placeholder="First name" />
+              <button class="clear-btn" data-target="firstName" aria-label="Clear">✕</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="lastName">Last name (legal)</label>
+            <div class="input-wrap">
+              <input type="text" id="lastName" autocomplete="family-name" placeholder="Last name" />
+              <button class="clear-btn" data-target="lastName" aria-label="Clear">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email address</label>
+          <div class="input-wrap">
+            <input type="email" id="email" autocomplete="email" placeholder="you@example.com" />
+            <button class="clear-btn" data-target="email" aria-label="Clear">✕</button>
+          </div>
+        </div>
+      </div>
+      <div class="continue-wrap">
+        <button class="continue-btn" data-next="2">Continue</button>
+      </div>
+    </div>
+
+    <!-- ============ Screen 2: Phone ============ -->
+    <div class="screen" data-step="2">
+      <div class="content">
+        <h1>What's your phone number?</h1>
+        <p class="subtitle">We'll send a verification code to confirm it's you.</p>
+
+        <div class="field">
+          <label for="phone">Mobile number</label>
+          <div class="input-wrap">
+            <input type="tel" id="phone" placeholder="(555) 123-4567" autocomplete="tel" />
+            <button class="clear-btn" data-target="phone" aria-label="Clear">✕</button>
+          </div>
+        </div>
+      </div>
+      <div class="continue-wrap">
+        <button class="continue-btn" data-next="3">Continue</button>
+      </div>
+    </div>
+
+    <!-- ============ Screen 3: Address Lookup ============ -->
+    <div class="screen" data-step="3">
+      <div class="content">
+        <h1>Where do you live?</h1>
+        <p class="subtitle">Find your apartment building so we can connect your rent payment.</p>
+
+        <div id="addressSearchView">
+          <div class="field" style="margin-bottom: 8px;">
+            <label for="addressSearch">Search your building</label>
+            <div class="input-wrap">
+              <input type="text" id="addressSearch" placeholder="Building name or address" autocomplete="off" />
+              <button class="clear-btn" data-target="addressSearch" aria-label="Clear">✕</button>
+            </div>
+          </div>
+          <div class="lookup-results" id="lookupResults"></div>
+          <a class="manual-entry-link" id="manualEntry">Can't find your building? Enter manually</a>
+        </div>
+
+        <div id="addressSelectedView" style="display: none;">
+          <div class="selected-card">
+            <div class="pin">📍</div>
+            <div class="info">
+              <div class="name" id="selectedName"></div>
+              <div class="addr" id="selectedAddr"></div>
+            </div>
+            <button class="change" id="changeBuilding">Change</button>
+          </div>
+          <div class="field">
+            <label for="unitNumber">Unit number</label>
+            <div class="input-wrap">
+              <input type="text" id="unitNumber" placeholder="Apt, suite, etc." />
+              <button class="clear-btn" data-target="unitNumber" aria-label="Clear">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="continue-wrap">
+        <button class="continue-btn" data-next="4" id="screen3Continue" disabled>Continue</button>
+      </div>
+    </div>
+
+    <!-- ============ Screen 4: Rent amount ============ -->
+    <div class="screen" data-step="4">
+      <div class="content">
+        <h1>How much is your rent?</h1>
+        <p class="subtitle">Enter your monthly rent amount. We'll use this to calculate your options.</p>
+
+        <div class="field">
+          <label for="rent">Monthly rent</label>
+          <div class="input-wrap">
+            <span class="input-prefix">$</span>
+            <input type="text" inputmode="numeric" id="rent" class="prefix-input" placeholder="1,550" />
+            <button class="clear-btn" data-target="rent" aria-label="Clear">✕</button>
+          </div>
+        </div>
+      </div>
+      <div class="continue-wrap">
+        <button class="continue-btn" data-next="5" id="screen4Continue" disabled>Continue</button>
+      </div>
+    </div>
+
+    <!-- ============ Screen 5: Approved + plan selection ============ -->
+    <div class="screen" data-step="5">
+      <div class="content">
+        <div class="approval-banner">
+          <div class="approval-check">✓</div>
+          <span class="approval-badge">You're approved</span>
+          <h1>Choose how you want to use Flex</h1>
+          <p class="subtitle" style="margin-bottom: 0;">
+            You've been approved for <strong style="color: var(--flex-purple);" id="approvedAmount">$500</strong> of rent credit each month.
+          </p>
+        </div>
+
+        <div class="plans-intro">Select a plan</div>
+
+        <!-- Paid plan (emphasized) -->
+        <div class="plan-card recommended selected" data-plan="flex">
+          <span class="recommended-tag">Most Popular</span>
+          <div class="plan-header">
+            <div style="display: flex; align-items: center;">
+              <div class="radio"></div>
+              <div class="plan-name">Flex</div>
+            </div>
+            <div class="plan-price-block">
+              <div class="plan-price" id="flexFee">$21.70</div>
+              <div class="plan-price-unit">per month · 1.4% of rent</div>
+            </div>
+          </div>
+          <p class="plan-tagline" id="flexTagline">Pay part of your rent now and defer the rest to later in the month.</p>
+          <ul class="plan-features">
+            <li id="flexDeferFeature">Defer up to $500 of your rent each month</li>
+            <li>Avoid late fees and cash crunches</li>
+            <li>Build credit history with on-time payments</li>
+          </ul>
+        </div>
+
+        <!-- Free plan (de-emphasized) -->
+        <div class="plan-card free" data-plan="pif">
+          <div class="plan-header">
+            <div style="display: flex; align-items: center;">
+              <div class="radio"></div>
+              <div class="plan-name">Pay in Full</div>
+            </div>
+            <div class="plan-price-block">
+              <div class="plan-price">$0</div>
+              <div class="plan-price-unit">no monthly fee</div>
+            </div>
+          </div>
+          <p class="plan-tagline">
+            Keep your <strong id="pifAmount">$500</strong> credit approval ready for whenever you need it.
+          </p>
+          <ul class="plan-features">
+            <li>Pay your full rent on time, your way</li>
+            <li>Preserve your credit offer for future months</li>
+          </ul>
+        </div>
+      </div>
+      <div class="continue-wrap">
+        <button class="continue-btn" id="finishBtn">Confirm selection</button>
+      </div>
+    </div>
+
+    <!-- iOS keyboard -->
+    <div class="keyboard">
+      <div class="kb-row">
+        <div class="kb-key">q</div><div class="kb-key">w</div><div class="kb-key">e</div>
+        <div class="kb-key">r</div><div class="kb-key">t</div><div class="kb-key">y</div>
+        <div class="kb-key">u</div><div class="kb-key">i</div><div class="kb-key">o</div>
+        <div class="kb-key">p</div>
+      </div>
+      <div class="kb-row">
+        <div class="kb-key">a</div><div class="kb-key">s</div><div class="kb-key">d</div>
+        <div class="kb-key">f</div><div class="kb-key">g</div><div class="kb-key">h</div>
+        <div class="kb-key">j</div><div class="kb-key">k</div><div class="kb-key">l</div>
+      </div>
+      <div class="kb-row">
+        <div class="kb-key wide">⇧</div>
+        <div class="kb-key">z</div><div class="kb-key">x</div><div class="kb-key">c</div>
+        <div class="kb-key">v</div><div class="kb-key">b</div><div class="kb-key">n</div>
+        <div class="kb-key">m</div>
+        <div class="kb-key wide">⌫</div>
+      </div>
+      <div class="kb-row">
+        <div class="kb-key wide">123</div>
+        <div class="kb-key wide">😊</div>
+        <div class="kb-key space"></div>
+        <div class="kb-key return">⏎</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // --- State ---
+  const TOTAL_STEPS = 5;
+  let currentStep = 1;
+  const state = {
+    building: null,
+    rent: null,
+    plan: 'flex'
+  };
+
+  const MOCK_BUILDINGS = [
+    { name: 'The Avery', addr: '420 Market St, San Francisco, CA' },
+    { name: 'Parkside Lofts', addr: '1100 Park Ave, Brooklyn, NY' },
+    { name: 'Hudson View Apartments', addr: '77 Hudson St, Jersey City, NJ' },
+    { name: 'Mission Bay Residences', addr: '300 3rd St, San Francisco, CA' },
+    { name: 'The Addison', addr: '2501 N Addison St, Chicago, IL' },
+    { name: 'Riverwalk Commons', addr: '88 River Rd, Austin, TX' },
+    { name: 'Pine Street Flats', addr: '905 Pine St, Seattle, WA' },
+    { name: 'Harbor Heights', addr: '150 Harbor Blvd, Boston, MA' }
+  ];
+
+  // --- Clear (✕) buttons ---
+  document.querySelectorAll('.clear-btn').forEach(btn => {
+    const targetId = btn.dataset.target;
+    const input = document.getElementById(targetId);
+    if (!input) return;
+
+    const updateVisibility = () => {
+      btn.classList.toggle('visible', input.value.length > 0 && document.activeElement === input);
+    };
+
+    input.addEventListener('input', updateVisibility);
+    input.addEventListener('focus', updateVisibility);
+    input.addEventListener('blur', () => setTimeout(() => btn.classList.remove('visible'), 150));
+
+    btn.addEventListener('mousedown', e => {
+      e.preventDefault();
+      input.value = '';
+      input.dispatchEvent(new Event('input'));
+      input.focus();
+    });
+  });
+
+  // --- Navigation ---
+  function showStep(n) {
+    currentStep = n;
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.step, 10) === n);
+    });
+    document.getElementById('progressFill').style.width = (n / TOTAL_STEPS * 100) + '%';
+    document.getElementById('backBtn').classList.toggle('hidden', n === 1);
+
+    // Refresh screen-5 numbers when we land there
+    if (n === 5) updateApprovalNumbers();
+  }
+
+  document.querySelectorAll('[data-next]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const next = parseInt(btn.dataset.next, 10);
+      showStep(next);
+    });
+  });
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    if (currentStep > 1) showStep(currentStep - 1);
+  });
+
+  // --- Screen 3: Address lookup ---
+  const searchInput = document.getElementById('addressSearch');
+  const resultsEl = document.getElementById('lookupResults');
+  const screen3Continue = document.getElementById('screen3Continue');
+
+  function renderResults(q) {
+    const query = q.trim().toLowerCase();
+    if (!query) {
+      resultsEl.innerHTML = '';
+      return;
+    }
+    const matches = MOCK_BUILDINGS.filter(b =>
+      b.name.toLowerCase().includes(query) || b.addr.toLowerCase().includes(query)
+    ).slice(0, 5);
+
+    if (matches.length === 0) {
+      resultsEl.innerHTML = `<div class="lookup-item" style="cursor: default; color: var(--text-muted); font-size: 13px;">
+        <span class="pin">🔍</span><div class="info">No results. Try a different name or enter manually below.</div>
+      </div>`;
+      return;
+    }
+
+    resultsEl.innerHTML = matches.map(b => `
+      <div class="lookup-item" data-name="${b.name}" data-addr="${b.addr}">
+        <span class="pin">📍</span>
+        <div class="info">
+          <div class="name">${b.name}</div>
+          <div class="addr">${b.addr}</div>
+        </div>
+      </div>
+    `).join('');
+
+    resultsEl.querySelectorAll('.lookup-item[data-name]').forEach(item => {
+      item.addEventListener('click', () => {
+        selectBuilding(item.dataset.name, item.dataset.addr);
+      });
+    });
+  }
+
+  searchInput.addEventListener('input', e => renderResults(e.target.value));
+
+  function selectBuilding(name, addr) {
+    state.building = { name, addr };
+    document.getElementById('selectedName').textContent = name;
+    document.getElementById('selectedAddr').textContent = addr;
+    document.getElementById('addressSearchView').style.display = 'none';
+    document.getElementById('addressSelectedView').style.display = 'block';
+    screen3Continue.disabled = false;
+  }
+
+  document.getElementById('changeBuilding').addEventListener('click', () => {
+    state.building = null;
+    searchInput.value = '';
+    renderResults('');
+    document.getElementById('addressSearchView').style.display = 'block';
+    document.getElementById('addressSelectedView').style.display = 'none';
+    screen3Continue.disabled = true;
+    searchInput.focus();
+  });
+
+  document.getElementById('manualEntry').addEventListener('click', () => {
+    selectBuilding('Manual entry', 'Address entered manually');
+  });
+
+  // --- Screen 4: Rent amount ---
+  const rentInput = document.getElementById('rent');
+  const screen4Continue = document.getElementById('screen4Continue');
+
+  rentInput.addEventListener('input', e => {
+    const raw = e.target.value.replace(/[^\d]/g, '');
+    e.target.value = raw ? Number(raw).toLocaleString('en-US') : '';
+    state.rent = raw ? parseInt(raw, 10) : null;
+    screen4Continue.disabled = !state.rent || state.rent < 1;
+  });
+
+  function formatMoney(n) {
+    return '$' + Number(n).toLocaleString('en-US', { maximumFractionDigits: 0 });
+  }
+
+  function updateApprovalNumbers() {
+    const rent = state.rent || 1550;
+    // Credit amount is ~1/3 of rent, rounded to nearest $50, floor $50.
+    // (Doc benchmark: $540 avg credit on $1,550 avg rent.)
+    const credit = Math.max(50, Math.round(rent / 3 / 50) * 50);
+    const upfront = rent - credit;
+
+    document.getElementById('approvedAmount').textContent = formatMoney(credit);
+    document.getElementById('pifAmount').textContent = formatMoney(credit);
+    document.getElementById('flexTagline').textContent =
+      `Pay ${formatMoney(upfront)} now and defer ${formatMoney(credit)} to later in the month.`;
+    document.getElementById('flexDeferFeature').textContent =
+      `Defer up to ${formatMoney(credit)} of your rent each month`;
+
+    const fee = (rent * 0.014).toFixed(2);
+    document.getElementById('flexFee').textContent = '$' + Number(fee).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  // --- Screen 5: Plan selection ---
+  document.querySelectorAll('.plan-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      state.plan = card.dataset.plan;
+    });
+  });
+
+  document.getElementById('finishBtn').addEventListener('click', () => {
+    const label = state.plan === 'flex' ? 'Flex (split rent)' : 'Pay in Full';
+    alert(`Selected: ${label}\n\nBuilding: ${state.building ? state.building.name : '—'}\nMonthly rent: ${state.rent ? formatMoney(state.rent) : '—'}`);
+  });
+
+  // Init
+  showStep(1);
+  updateApprovalNumbers();
+</script>
+</body>
+</html>
