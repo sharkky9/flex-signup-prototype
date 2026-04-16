@@ -313,43 +313,36 @@
   .continue-btn:hover:not(:disabled) { background: var(--flex-purple-dark); }
   .continue-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* Approval banner on screen 5 */
+  /* Approval banner on screen 5 — compact chip + short heading */
   .approval-banner {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
-  .approval-check {
-    width: 64px;
-    height: 64px;
+  .approval-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--flex-purple-accent);
+    color: var(--flex-purple);
+    padding: 6px 14px 6px 6px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .approval-chip-icon {
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     background: var(--flex-purple);
     color: #fff;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
-    margin: 0 auto 16px;
-    box-shadow: 0 8px 20px rgba(74, 30, 107, 0.25);
-  }
-  .approval-badge {
-    display: inline-block;
-    background: var(--flex-purple-accent);
-    color: var(--flex-purple);
-    padding: 4px 12px;
-    border-radius: 100px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
-    text-transform: uppercase;
   }
-  .approval-banner h1 { margin-bottom: 6px; }
-  .approval-amount {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--flex-purple);
-    margin-bottom: 4px;
-  }
+  .approval-banner h1 { margin-bottom: 0; }
 
   /* Plan cards */
   .plans-intro {
@@ -818,15 +811,12 @@
     <div class="screen" data-step="5">
       <div class="content">
         <div class="approval-banner">
-          <div class="approval-check">✓</div>
-          <span class="approval-badge">You're approved</span>
-          <h1>Choose how you want to use Flex</h1>
-          <p class="subtitle" style="margin-bottom: 0;">
-            You've been approved for <strong style="color: var(--flex-purple);" id="approvedAmount">$500</strong> of rent credit each month.
-          </p>
+          <div class="approval-chip">
+            <span class="approval-chip-icon">✓</span>
+            <span>You're approved for <strong id="approvedAmount">$500</strong> of rent credit</span>
+          </div>
+          <h1>Choose your plan</h1>
         </div>
-
-        <div class="plans-intro">Select a plan</div>
 
         <!-- Paid plan (emphasized) -->
         <div class="plan-card recommended selected" data-plan="flex">
