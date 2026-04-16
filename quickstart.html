@@ -649,6 +649,7 @@
     user-select: none;
     flex-shrink: 0;
   }
+  .keyboard.hidden { display: none; }
   .kb-row {
     display: flex;
     justify-content: center;
@@ -1010,6 +1011,10 @@
     document.getElementById('progressFill').style.width = (progressStep / TOTAL_STEPS * 100) + '%';
     // Hide back button at (or before) the starting step — user can't rewind past where they started
     document.getElementById('backBtn').classList.toggle('hidden', n <= STARTING_STEP);
+
+    // Hide the iOS keyboard on screens with no text inputs (plan selection, PIF reinforcement)
+    const hasInput = n <= 4;
+    document.querySelector('.keyboard').classList.toggle('hidden', !hasInput);
 
     // Refresh dynamic numbers when entering screens that show them
     if (n === 5 || n === 6) updateApprovalNumbers();
