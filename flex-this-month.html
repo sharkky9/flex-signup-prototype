@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Flex — Split this month?</title>
+<title>Flex — Your plan</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -57,41 +57,24 @@
   .status-bar .time { display: flex; align-items: center; gap: 4px; }
   .status-bar .notch {
     position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 110px;
-    height: 28px;
-    background: #000;
-    border-radius: 20px;
+    top: 10px; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 28px;
+    background: #000; border-radius: 20px;
   }
   .status-bar .right { display: flex; align-items: center; gap: 6px; font-size: 13px; }
   .battery {
     display: inline-block;
-    width: 24px;
-    height: 12px;
-    border: 1px solid #000;
-    border-radius: 3px;
-    position: relative;
-    padding: 1px;
+    width: 24px; height: 12px;
+    border: 1px solid #000; border-radius: 3px;
+    position: relative; padding: 1px;
   }
   .battery::after {
-    content: '';
-    position: absolute;
-    right: -3px;
-    top: 3px;
-    width: 2px;
-    height: 4px;
-    background: #000;
-    border-radius: 0 1px 1px 0;
+    content: ''; position: absolute;
+    right: -3px; top: 3px;
+    width: 2px; height: 4px;
+    background: #000; border-radius: 0 1px 1px 0;
   }
-  .battery-fill {
-    display: block;
-    height: 100%;
-    width: 86%;
-    background: #000;
-    border-radius: 1px;
-  }
+  .battery-fill { display: block; height: 100%; width: 86%; background: #000; border-radius: 1px; }
 
   /* Top bar */
   .top-bar {
@@ -102,21 +85,19 @@
     flex-shrink: 0;
   }
   .icon-btn {
-    width: 32px;
-    height: 32px;
+    width: 32px; height: 32px;
     border-radius: 50%;
     background: transparent;
     border: none;
     font-size: 18px;
     cursor: pointer;
     color: #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
   .icon-btn:hover { background: var(--bg-muted); }
   .icon-btn.help { background: #f3f1f6; font-size: 16px; }
+  .icon-btn.hidden { visibility: hidden; }
   .top-title {
     flex: 1;
     text-align: center;
@@ -125,6 +106,15 @@
     color: var(--text);
     padding: 0 4px;
   }
+
+  /* Screens */
+  .screen {
+    display: none;
+    flex: 1;
+    min-height: 0;
+    flex-direction: column;
+  }
+  .screen.active { display: flex; }
 
   /* Content */
   .content {
@@ -145,126 +135,6 @@
     font-size: 14px;
     line-height: 1.5;
   }
-
-  /* Rent context — status + amount due */
-  .rent-context {
-    text-align: center;
-    margin-bottom: 18px;
-  }
-  .plan-status-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--flex-purple-accent);
-    color: var(--flex-purple);
-    padding: 5px 12px 5px 10px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-  .plan-status-chip .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--flex-purple);
-  }
-  .rent-due-amount {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .rent-due-label {
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-
-  /* Hero copy */
-  .hero-copy {
-    margin-bottom: 18px;
-  }
-
-  /* Split visualization */
-  .split-viz {
-    margin-bottom: 16px;
-  }
-  .split-bar {
-    display: flex;
-    height: 44px;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(74, 30, 107, 0.12);
-  }
-  .split-segment {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
-  }
-  .split-now {
-    background: var(--flex-purple);
-    flex: 0 0 66.67%;
-  }
-  .split-later {
-    background: var(--flex-purple-soft);
-    flex: 0 0 33.33%;
-  }
-  .split-labels {
-    display: flex;
-    margin-top: 8px;
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-  }
-  .split-labels span:first-child {
-    flex: 0 0 66.67%;
-    text-align: left;
-  }
-  .split-labels span:last-child {
-    flex: 0 0 33.33%;
-    text-align: left;
-    padding-left: 8px;
-  }
-
-  /* Details breakdown */
-  .flex-details {
-    background: var(--bg-muted);
-    border-radius: 14px;
-    padding: 4px 18px;
-    margin-bottom: 14px;
-  }
-  .detail-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    font-size: 14px;
-  }
-  .detail-row:not(:last-child) {
-    border-bottom: 1px solid var(--border-muted);
-  }
-  .detail-label { color: var(--text); }
-  .detail-value { font-weight: 600; color: var(--text); }
-  .detail-row.fee { color: var(--flex-purple); }
-  .detail-row.fee .detail-value { color: var(--flex-purple); }
-
-  /* Benefit callout */
-  .benefit-note {
-    background: var(--flex-purple-tint);
-    border-left: 3px solid var(--flex-purple);
-    border-radius: 0 10px 10px 0;
-    padding: 12px 14px;
-    font-size: 13px;
-    color: var(--text);
-    line-height: 1.45;
-  }
-  .benefit-note strong { color: var(--flex-purple); }
 
   /* CTA wrap */
   .continue-wrap {
@@ -299,6 +169,175 @@
     font-family: inherit;
   }
   .text-btn:hover { color: var(--text); text-decoration: underline; }
+
+  /* ============ Screen 1: PIF plan management ============ */
+  .plan-status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--flex-purple-accent);
+    color: var(--flex-purple);
+    padding: 5px 12px 5px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .plan-status-chip .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--flex-purple);
+  }
+
+  /* Hero — the credit line as asset */
+  .pif-asset {
+    background: linear-gradient(135deg, var(--flex-purple) 0%, #6b30a0 100%);
+    color: #fff;
+    border-radius: 18px;
+    padding: 22px 20px;
+    text-align: center;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 24px rgba(74, 30, 107, 0.28);
+  }
+  .pif-asset-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+    display: inline-block;
+  }
+  .pif-asset-amount {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .pif-asset-label {
+    font-size: 14px;
+    opacity: 0.92;
+    margin-bottom: 10px;
+  }
+  .pif-asset-caption {
+    font-size: 13px;
+    opacity: 0.82;
+    line-height: 1.4;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    padding-top: 10px;
+    margin-top: 4px;
+  }
+
+  /* Upcoming rent info card */
+  .info-card {
+    background: var(--bg-muted);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+  }
+  .info-label {
+    font-size: 11px;
+    color: var(--text-subtle);
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .info-main {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .info-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .info-meta {
+    font-size: 12px;
+    color: var(--text-subtle);
+    padding-top: 10px;
+    border-top: 1px solid var(--border-muted);
+  }
+
+  /* ============ Screen 2: Flex offer ============ */
+  /* Rent context — status + amount due */
+  .rent-context {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .rent-due-amount {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .rent-due-label {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .hero-copy { margin-bottom: 18px; }
+
+  /* Split visualization */
+  .split-viz { margin-bottom: 16px; }
+  .split-bar {
+    display: flex;
+    height: 44px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(74, 30, 107, 0.12);
+  }
+  .split-segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .split-now { background: var(--flex-purple); flex: 0 0 66.67%; }
+  .split-later { background: var(--flex-purple-soft); flex: 0 0 33.33%; }
+  .split-labels {
+    display: flex;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .split-labels span:first-child { flex: 0 0 66.67%; text-align: left; }
+  .split-labels span:last-child { flex: 0 0 33.33%; text-align: left; padding-left: 8px; }
+
+  /* Details breakdown */
+  .flex-details {
+    background: var(--bg-muted);
+    border-radius: 14px;
+    padding: 4px 18px;
+    margin-bottom: 14px;
+  }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    font-size: 14px;
+  }
+  .detail-row:not(:last-child) { border-bottom: 1px solid var(--border-muted); }
+  .detail-label { color: var(--text); }
+  .detail-value { font-weight: 600; color: var(--text); }
+  .detail-row.fee { color: var(--flex-purple); }
+  .detail-row.fee .detail-value { color: var(--flex-purple); }
+
+  /* Benefit callout */
+  .benefit-note {
+    background: var(--flex-purple-tint);
+    border-left: 3px solid var(--flex-purple);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.45;
+  }
+  .benefit-note strong { color: var(--flex-purple); }
 </style>
 </head>
 <body>
@@ -307,75 +346,125 @@
       <div class="time">3:02 <span>😊</span></div>
       <div class="notch"></div>
       <div class="right">
-        <span>📶</span>
-        <span>📡</span>
-        <span>86</span>
+        <span>📶</span><span>📡</span><span>86</span>
         <span class="battery"><span class="battery-fill"></span></span>
       </div>
     </div>
 
     <div class="top-bar">
-      <button class="icon-btn" aria-label="Back">←</button>
-      <div class="top-title">May rent</div>
+      <button class="icon-btn hidden" id="backBtn" aria-label="Back">←</button>
+      <div class="top-title" id="topTitle">Your plan</div>
       <button class="icon-btn help" title="Help">?</button>
     </div>
 
-    <div class="content">
-      <div class="rent-context">
+    <!-- ============ Screen 1: PIF plan management ============ -->
+    <div class="screen active" data-step="1">
+      <div class="content">
         <div class="plan-status-chip">
           <span class="dot"></span>
-          On Pay in Full
+          Pay in Full · active
         </div>
-        <div class="rent-due-amount">$1,500</div>
-        <div class="rent-due-label">May rent · due in 3 days</div>
-      </div>
 
-      <div class="hero-copy">
-        <h1>Want to flex May's rent?</h1>
-        <p class="subtitle">
-          Pay part now, cover the rest mid-month. One-time fee, no plan change — you stay on Pay in Full.
-        </p>
-      </div>
-
-      <div class="split-viz">
-        <div class="split-bar">
-          <div class="split-segment split-now">$1,000 on May 1</div>
-          <div class="split-segment split-later">$500 on May 16</div>
+        <div class="pif-asset">
+          <div class="pif-asset-icon">🛡️</div>
+          <div class="pif-asset-amount">$500</div>
+          <div class="pif-asset-label">credit line, open</div>
+          <div class="pif-asset-caption">
+            Your safety net stays ready as long as you pay rent through Flex each month.
+          </div>
         </div>
-        <div class="split-labels">
-          <span>Upfront</span>
-          <span>Deferred</span>
+
+        <div class="info-card">
+          <div class="info-label">Upcoming</div>
+          <div class="info-main">May rent · $1,500</div>
+          <div class="info-sub">Due May 1 · in 3 days</div>
+          <div class="info-meta">Will be paid in full from your linked account</div>
         </div>
       </div>
 
-      <div class="flex-details">
-        <div class="detail-row">
-          <span class="detail-label">May rent</span>
-          <span class="detail-value">$1,500</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Pay May 1</span>
-          <span class="detail-value">$1,000</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Pay May 16</span>
-          <span class="detail-value">$500</span>
-        </div>
-        <div class="detail-row fee">
-          <span class="detail-label">One-time Flex fee</span>
-          <span class="detail-value">$21.00</span>
-        </div>
-      </div>
-
-      <div class="benefit-note">
-        Keep <strong>$500</strong> in your pocket on rent day — cover the rest mid-month when your paycheck hits.
+      <div class="continue-wrap">
+        <button class="continue-btn" onclick="showScreen(2)">Flex this month's rent</button>
+        <button class="text-btn">Manage plan</button>
       </div>
     </div>
 
-    <div class="continue-wrap">
-      <button class="continue-btn">Flex May's rent (+$21)</button>
-      <button class="text-btn">Pay $1,500 in full</button>
+    <!-- ============ Screen 2: Flex offer ============ -->
+    <div class="screen" data-step="2">
+      <div class="content">
+        <div class="rent-context">
+          <div class="plan-status-chip">
+            <span class="dot"></span>
+            On Pay in Full
+          </div>
+          <div class="rent-due-amount">$1,500</div>
+          <div class="rent-due-label">May rent · due in 3 days</div>
+        </div>
+
+        <div class="hero-copy">
+          <h1>Want to flex May's rent?</h1>
+          <p class="subtitle">
+            Pay part now, cover the rest mid-month. One-time fee, no plan change — you stay on Pay in Full.
+          </p>
+        </div>
+
+        <div class="split-viz">
+          <div class="split-bar">
+            <div class="split-segment split-now">$1,000 on May 1</div>
+            <div class="split-segment split-later">$500 on May 16</div>
+          </div>
+          <div class="split-labels">
+            <span>Upfront</span>
+            <span>Deferred</span>
+          </div>
+        </div>
+
+        <div class="flex-details">
+          <div class="detail-row">
+            <span class="detail-label">May rent</span>
+            <span class="detail-value">$1,500</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Pay May 1</span>
+            <span class="detail-value">$1,000</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Pay May 16</span>
+            <span class="detail-value">$500</span>
+          </div>
+          <div class="detail-row fee">
+            <span class="detail-label">One-time Flex fee</span>
+            <span class="detail-value">$21.00</span>
+          </div>
+        </div>
+
+        <div class="benefit-note">
+          Keep <strong>$500</strong> in your pocket on rent day — cover the rest mid-month when your paycheck hits.
+        </div>
+      </div>
+
+      <div class="continue-wrap">
+        <button class="continue-btn" onclick="alert('Flex confirmed for May\u2019s rent.\\n\\nPay $1,000 on May 1, $500 on May 16.\\nOne-time fee: $21.00.')">Flex May's rent (+$21)</button>
+        <button class="text-btn" onclick="showScreen(1)">Pay $1,500 in full</button>
+      </div>
     </div>
   </div>
+
+<script>
+  const TITLES = { 1: 'Your plan', 2: 'May rent' };
+  let currentScreen = 1;
+
+  function showScreen(n) {
+    currentScreen = n;
+    document.querySelectorAll('.screen').forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.step, 10) === n);
+    });
+    document.getElementById('backBtn').classList.toggle('hidden', n === 1);
+    document.getElementById('topTitle').textContent = TITLES[n] || '';
+  }
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    if (currentScreen > 1) showScreen(currentScreen - 1);
+  });
+</script>
 </body>
 </html>
