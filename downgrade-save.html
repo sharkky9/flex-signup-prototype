@@ -348,17 +348,16 @@
   .option-card.tier3:hover { background: #edeaf0; }
 
   .option-tag {
-    position: absolute;
-    top: -9px;
-    left: 18px;
-    background: #fff;
-    color: var(--flex-purple);
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.6px;
     padding: 3px 10px;
     border-radius: 100px;
     text-transform: uppercase;
+    margin-bottom: 10px;
   }
 
   .option-name {
@@ -499,12 +498,11 @@
       <div class="content">
         <div class="screen2-intro">
           <h1>Change your plan</h1>
-          <p class="subtitle">Three options, listed in the order we'd recommend.</p>
         </div>
 
         <!-- Tier 1: Keep current plan (most emphasized) -->
         <div class="option-card tier1" onclick="keepCurrentPlan()">
-          <span class="option-tag">Your current plan</span>
+          <div class="option-tag">Your current plan</div>
           <div class="option-name">Flex</div>
           <div class="option-headline">Keep splitting your rent each month</div>
           <ul class="option-features">
@@ -513,7 +511,7 @@
             <li>Keep building credit through Flex's rent reporting</li>
           </ul>
           <div class="option-footer">
-            <span>$21/mo only when you split</span>
+            <span>$21/mo</span>
             <span class="option-arrow">→</span>
           </div>
         </div>
