@@ -484,6 +484,146 @@
     border-radius: 50%;
   }
 
+  /* ===== Screen 6: PIF reinforcement / timeline ===== */
+  .pif-hero {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .pif-shield {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--flex-purple) 0%, #6b30a0 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin: 0 auto 14px;
+    box-shadow: 0 10px 24px rgba(74, 30, 107, 0.28);
+  }
+  .pif-hero h1 { margin-bottom: 8px; font-size: 22px; }
+  .pif-hero .subtitle { margin-bottom: 0; }
+
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+    margin-bottom: 8px;
+  }
+  .tl-item {
+    position: relative;
+    padding-bottom: 22px;
+  }
+  .tl-item:last-child { padding-bottom: 0; }
+
+  /* Vertical connector line */
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 22px;
+    bottom: -2px;
+    width: 2px;
+    background: var(--border-muted);
+  }
+  .tl-item:last-child::before { display: none; }
+  .tl-item.past::before, .tl-item.current::before { background: var(--flex-purple); }
+
+  .tl-marker {
+    position: absolute;
+    left: -33px;
+    top: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--border-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    z-index: 1;
+  }
+  .tl-item.past .tl-marker {
+    background: var(--flex-purple);
+    border-color: var(--flex-purple);
+  }
+  .tl-item.past .tl-marker::after { content: '✓'; }
+  .tl-item.current .tl-marker {
+    background: var(--flex-purple);
+    border-color: var(--flex-purple);
+    box-shadow: 0 0 0 4px var(--flex-purple-accent);
+  }
+  .tl-item.future .tl-marker {
+    background: #fff;
+    border-color: var(--flex-purple);
+  }
+  .tl-item.future .tl-marker::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--flex-purple);
+    opacity: 0.4;
+  }
+  .tl-item.highlight .tl-marker {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--flex-purple) 0%, #6b30a0 100%);
+    border: none;
+    left: -37px;
+    top: 0;
+    font-size: 14px;
+    box-shadow: 0 6px 16px rgba(74, 30, 107, 0.35);
+  }
+  .tl-item.highlight .tl-marker::after { content: '⚡'; }
+
+  .tl-content { padding-left: 4px; }
+  .tl-month {
+    font-size: 11px;
+    color: var(--text-subtle);
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .tl-status {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .tl-item.future .tl-month { color: var(--text-subtle); }
+  .tl-item.future .tl-status { color: var(--text-muted); }
+  .tl-item.highlight .tl-month { color: var(--flex-purple); }
+  .tl-item.highlight .tl-content {
+    background: var(--flex-purple-tint);
+    border: 1px solid var(--flex-purple-accent);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-left: -4px;
+    margin-top: -2px;
+  }
+  .tl-item.highlight .tl-status {
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .text-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--flex-purple);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 14px 12px 4px;
+    margin-top: 4px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .text-btn:hover { text-decoration: underline; }
+
   /* iOS keyboard mock */
   .keyboard {
     background: #d1d3d9;
@@ -716,6 +856,65 @@
       </div>
     </div>
 
+    <!-- ============ Screen 6: PIF reinforcement ============ -->
+    <div class="screen" data-step="6">
+      <div class="content">
+        <div class="pif-hero">
+          <div class="pif-shield">🛡️</div>
+          <h1>Your <span id="pifHeroAmount">$500</span> safety net, always ready</h1>
+          <p class="subtitle">
+            Pay your rent on time and your credit offer is preserved — for whenever you need it.
+          </p>
+        </div>
+
+        <div class="timeline">
+          <div class="tl-item past">
+            <div class="tl-marker"></div>
+            <div class="tl-content">
+              <div class="tl-month">Today</div>
+              <div class="tl-status"><strong id="pifTimelineAmount1">$500</strong> approved and ready</div>
+            </div>
+          </div>
+          <div class="tl-item current">
+            <div class="tl-marker"></div>
+            <div class="tl-content">
+              <div class="tl-month">This month</div>
+              <div class="tl-status">Rent paid on time → credit preserved</div>
+            </div>
+          </div>
+          <div class="tl-item future">
+            <div class="tl-marker"></div>
+            <div class="tl-content">
+              <div class="tl-month">Next month</div>
+              <div class="tl-status">Rent paid on time → credit preserved</div>
+            </div>
+          </div>
+          <div class="tl-item future">
+            <div class="tl-marker"></div>
+            <div class="tl-content">
+              <div class="tl-month">And every month after</div>
+              <div class="tl-status">Same offer, no re-approval needed</div>
+            </div>
+          </div>
+          <div class="tl-item highlight">
+            <div class="tl-marker"></div>
+            <div class="tl-content">
+              <div class="tl-month">When life happens</div>
+              <div class="tl-status">
+                Tap once to use your <strong id="pifTimelineAmount2">$500</strong>.
+                <strong>No re-application required.</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="continue-wrap">
+        <button class="continue-btn" id="pifConfirmBtn">Continue with Pay in Full</button>
+        <button class="text-btn" id="switchToFlexBtn">I'd rather split my rent each month</button>
+      </div>
+    </div>
+
     <!-- iOS keyboard -->
     <div class="keyboard">
       <div class="kb-row">
@@ -794,11 +993,13 @@
     document.querySelectorAll('.screen').forEach(s => {
       s.classList.toggle('active', parseInt(s.dataset.step, 10) === n);
     });
-    document.getElementById('progressFill').style.width = (n / TOTAL_STEPS * 100) + '%';
+    // Progress maxes at TOTAL_STEPS (screen 6 is a value-prop screen, not new data entry)
+    const progressStep = Math.min(n, TOTAL_STEPS);
+    document.getElementById('progressFill').style.width = (progressStep / TOTAL_STEPS * 100) + '%';
     document.getElementById('backBtn').classList.toggle('hidden', n === 1);
 
-    // Refresh screen-5 numbers when we land there
-    if (n === 5) updateApprovalNumbers();
+    // Refresh dynamic numbers when entering screens that show them
+    if (n === 5 || n === 6) updateApprovalNumbers();
   }
 
   document.querySelectorAll('[data-next]').forEach(btn => {
@@ -905,6 +1106,11 @@
     document.getElementById('flexDeferFeature').textContent =
       `Defer up to ${formatMoney(credit)} of your rent each month`;
 
+    // Screen 6 (PIF reinforcement) credit amounts
+    document.getElementById('pifHeroAmount').textContent = formatMoney(credit);
+    document.getElementById('pifTimelineAmount1').textContent = formatMoney(credit);
+    document.getElementById('pifTimelineAmount2').textContent = formatMoney(credit);
+
     const fee = (rent * 0.014).toFixed(2);
     document.getElementById('flexFee').textContent = '$' + Number(fee).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
@@ -918,9 +1124,28 @@
     });
   });
 
-  document.getElementById('finishBtn').addEventListener('click', () => {
+  function completeSignup() {
     const label = state.plan === 'flex' ? 'Flex (split rent)' : 'Pay in Full';
     alert(`Selected: ${label}\n\nBuilding: ${state.building ? state.building.name : '—'}\nMonthly rent: ${state.rent ? formatMoney(state.rent) : '—'}`);
+  }
+
+  document.getElementById('finishBtn').addEventListener('click', () => {
+    if (state.plan === 'pif') {
+      // Show value-prop reinforcement before completing
+      showStep(6);
+    } else {
+      completeSignup();
+    }
+  });
+
+  document.getElementById('pifConfirmBtn').addEventListener('click', completeSignup);
+
+  document.getElementById('switchToFlexBtn').addEventListener('click', () => {
+    state.plan = 'flex';
+    document.querySelectorAll('.plan-card').forEach(c => {
+      c.classList.toggle('selected', c.dataset.plan === 'flex');
+    });
+    showStep(5);
   });
 
   // Init
